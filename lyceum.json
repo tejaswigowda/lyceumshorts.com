@@ -1,0 +1,364 @@
+{
+  "version": 1,
+  "subjects": [
+    {
+      "id": "maths",
+      "label": "Maths"
+    },
+    {
+      "id": "biology",
+      "label": "Biology"
+    },
+    {
+      "id": "physics",
+      "label": "Physics"
+    },
+    {
+      "id": "mechanism",
+      "label": "Mechanism"
+    }
+  ],
+  "entries": [
+    {
+      "id": "pythagoras",
+      "title": "Squares on a right triangle",
+      "subject": "maths",
+      "topic": "Pythagorean theorem",
+      "level": "intro",
+      "duration_s": 129,
+      "claim": "On a right triangle, the squares on the two legs together cover exactly the square on the hypotenuse: 3² + 4² = 5², shown with tiles, then again for 5-12-13 and 8-15-17.",
+      "assumptions": [
+        "the triangles are exact right triangles with whole-number sides (3-4-5, 5-12-13, 8-15-17)",
+        "lengths are counted in tiles: a tile is a 1 × 1 × 1 cube",
+        "three cases are counted; the film does not show the theorem for every right triangle"
+      ],
+      "status": "demonstration",
+      "checks": [],
+      "colour_key": [
+        {
+          "colour": "coral",
+          "means": "the square on the shorter leg, built from tiles (9 tiles for the 3-4-5 triangle)."
+        },
+        {
+          "colour": "aqua",
+          "means": "the square on the longer leg (16 tiles for 3-4-5). Coral and aqua tiles together fill the square on the hypotenuse."
+        },
+        {
+          "colour": "gold",
+          "means": "the right triangle itself."
+        },
+        {
+          "colour": "white",
+          "means": "the numbers and equations that count the tiles."
+        }
+      ],
+      "scene": {
+        "repo": "tejaswigowda/test1",
+        "file": "pyth.json",
+        "branch": "main"
+      },
+      "tutorial": "https://strataeditor.dev/about/tutorials/makeshort.html",
+      "render": {
+        "hls": "renders/pythagoras/master.m3u8",
+        "poster": "renders/pythagoras/poster.jpg",
+        "scene_commit": "89f9272c7b891ab7bf798a2b58de4b3a08a36eab",
+        "scene_hash": "sha256:c28eb7a93775a6ed80dafe283da2f183559c15c036f58b5f1162fd7575119554",
+        "exporter": "strata-export master, ffmpeg 8.1.1 + libx264 ladder",
+        "published": "2026-10-27"
+      },
+      "captions": "renders/pythagoras/captions.vtt",
+      "credits": [],
+      "license": "CC-BY-4.0"
+    },
+    {
+      "id": "a-plus-b-cubed",
+      "title": "A cube cut into eight blocks",
+      "subject": "maths",
+      "topic": "(a + b)³",
+      "level": "intro",
+      "duration_s": 51,
+      "claim": "A cube of side a + b, cut at a along each edge, falls into eight blocks (one a³, three a²b, three ab², one b³), so (a + b)³ = a³ + 3a²b + 3ab² + b³ for positive lengths a and b.",
+      "assumptions": [
+        "a and b are positive lengths, so the cube can be cut at a along each edge",
+        "the lengths are symbolic: there are no units, and a and b are drawn at one fixed ratio the identity does not depend on"
+      ],
+      "status": "derivation",
+      "checks": [],
+      "colour_key": [
+        {
+          "colour": "coral",
+          "means": "the one a × a × a block, and the term a³. The side a on the ruler is coral too."
+        },
+        {
+          "colour": "gold",
+          "means": "the three slabs a × a × b, and the term 3a²b."
+        },
+        {
+          "colour": "violet",
+          "means": "the three bars a × b × b, and the term 3ab²."
+        },
+        {
+          "colour": "aqua",
+          "means": "the one b × b × b block, and the term b³. The side b on the ruler is aqua too."
+        },
+        {
+          "colour": "pale blue",
+          "means": "the three planes that cut the cube, one per axis."
+        }
+      ],
+      "scene": {
+        "repo": "tejaswigowda/test1",
+        "file": "a+b-cubed.json",
+        "branch": "main"
+      },
+      "tutorial": "https://strataeditor.dev/about/tutorials/a-plus-b-cubed.html",
+      "render": {
+        "hls": "renders/a-plus-b-cubed/master.m3u8",
+        "poster": "renders/a-plus-b-cubed/poster.jpg",
+        "scene_commit": "89f9272c7b891ab7bf798a2b58de4b3a08a36eab",
+        "scene_hash": "sha256:168d52266fbd58f40c371d11b0ad6cf15f67a3deed74d6068522b8f73cf2e7fd",
+        "exporter": "strata-export master, ffmpeg 8.1.1 + libx264 ladder",
+        "published": "2026-10-27"
+      },
+      "captions": "renders/a-plus-b-cubed/captions.vtt",
+      "credits": [],
+      "license": "CC-BY-4.0"
+    },
+    {
+      "id": "hardy-weinberg",
+      "title": "Hardy–Weinberg as a square",
+      "subject": "biology",
+      "topic": "Hardy–Weinberg law",
+      "level": "intermediate",
+      "duration_s": 117,
+      "claim": "With random mating, one generation of offspring comes in the proportions p² + 2pq + q², drawn as a square, and the allele frequencies p and q are unchanged afterwards.",
+      "assumptions": [
+        "one gene with two alleles, A and a",
+        "random mating in a large (effectively infinite) population",
+        "no mutation, no selection, no migration, no drift",
+        "the film shows one round with p = 3/5 and q = 2/5 (a 5 × 5 square of tiles); it is one worked case, not the general law"
+      ],
+      "status": "demonstration",
+      "checks": [
+        {
+          "what": "the 30 A tokens and 20 a tokens span the same extents as the p and q rulers",
+          "samples": 50,
+          "max_residual": null,
+          "units": "scene",
+          "note": "read back from the loaded scene and equal to the last digit"
+        }
+      ],
+      "colour_key": [
+        {
+          "colour": "coral",
+          "means": "allele A, its frequency p, and the AA pieces (p²)."
+        },
+        {
+          "colour": "gold",
+          "means": "the heterozygote Aa: the two gold pieces stacked under the middle term 2pq."
+        },
+        {
+          "colour": "aqua",
+          "means": "allele a, its frequency q, and the aa piece (q²)."
+        },
+        {
+          "colour": "white",
+          "means": "labels, the cuts, and the two bins that count the alleles."
+        }
+      ],
+      "scene": {
+        "repo": "tejaswigowda/test1",
+        "file": "hw.json",
+        "branch": "main"
+      },
+      "tutorial": "https://strataeditor.dev/about/tutorials/hardy-weinberg.html",
+      "render": {
+        "hls": "renders/hardy-weinberg/master.m3u8",
+        "poster": "renders/hardy-weinberg/poster.jpg",
+        "scene_commit": "89f9272c7b891ab7bf798a2b58de4b3a08a36eab",
+        "scene_hash": "sha256:a5115ed50df3cc045839868952e445c622b66c4d49789e20f42750e6c6ec3422",
+        "exporter": "strata-export master, ffmpeg 8.1.1 + libx264 ladder",
+        "published": "2026-10-27"
+      },
+      "captions": "renders/hardy-weinberg/captions.vtt",
+      "credits": [],
+      "license": "CC-BY-4.0"
+    },
+    {
+      "id": "area-volume",
+      "title": "Why cells are small",
+      "subject": "biology",
+      "topic": "surface area to volume",
+      "level": "intro",
+      "duration_s": 101,
+      "claim": "For cubes, surface area divided by volume is 6, 3 and 2 for sides 1, 2 and 3, falling as 1 / side, so a bigger cell has less surface for each bit of interior.",
+      "assumptions": [
+        "cells are idealised cubes built from an exact grid of unit cubes",
+        "ratios are per unit-cube width; SA / V ∝ 1 / side holds in any units",
+        "the folded membranes (cristae, alveoli) illustrate the idea; they are not measurements of real membranes"
+      ],
+      "status": "demonstration",
+      "checks": [],
+      "colour_key": [
+        {
+          "colour": "aqua",
+          "means": "the unit cubes that make each cell."
+        },
+        {
+          "colour": "pink outline",
+          "means": "the skin: the surface of each cube, drawn as a see-through shell."
+        },
+        {
+          "colour": "gold",
+          "means": "the single cube in the middle of the side-3 cube, the one farthest from the skin; also the numbers and the biology notes."
+        },
+        {
+          "colour": "lilac",
+          "means": "the folded membrane in the last scenes."
+        },
+        {
+          "colour": "white",
+          "means": "the readout of side, surface area, volume and their ratio."
+        }
+      ],
+      "scene": {
+        "repo": "tejaswigowda/test1",
+        "file": "area-volume.json",
+        "branch": "main"
+      },
+      "tutorial": "https://strataeditor.dev/about/tutorials/area-volume.html",
+      "render": {
+        "hls": "renders/area-volume/master.m3u8",
+        "poster": "renders/area-volume/poster.jpg",
+        "scene_commit": "89f9272c7b891ab7bf798a2b58de4b3a08a36eab",
+        "scene_hash": "sha256:4f838d50cd62273e562ac325a64f86fc97d276bd72fe0bf74ef6703449d49f6b",
+        "exporter": "strata-export master, ffmpeg 8.1.1 + libx264 ladder",
+        "published": "2026-10-27"
+      },
+      "captions": "renders/area-volume/captions.vtt",
+      "credits": [],
+      "license": "CC-BY-4.0"
+    },
+    {
+      "id": "projectile",
+      "title": "Two motions at once",
+      "subject": "physics",
+      "topic": "projectile motion",
+      "level": "intro",
+      "duration_s": 81,
+      "claim": "A thrown ball's path is two independent motions: constant horizontal speed, and vertical motion under constant gravity.",
+      "assumptions": [
+        "no air resistance",
+        "constant gravity",
+        "flat ground, with launch and landing at one height",
+        "scene units, not SI: slow motion with g = 2.5 and a base speed of 6.32"
+      ],
+      "status": "demonstration",
+      "checks": [
+        {
+          "what": "ball position against the closed form x = vx·t and y = 0.25 + vy·t − ½·g·t²",
+          "samples": 35,
+          "max_residual": 0.002,
+          "units": "scene",
+          "note": "five flights: 30°, 45° and 60° at speed 1, and 45° at speeds 0.75 and 1.25"
+        }
+      ],
+      "colour_key": [
+        {
+          "colour": "aqua",
+          "means": "the sideways motion: the ground line, the ball's shadow on the ground, and the sideways arrow, which never changes."
+        },
+        {
+          "colour": "coral",
+          "means": "the up-and-down motion: the pole, the bead on it, and the vertical arrow, which shrinks to nothing at the top."
+        },
+        {
+          "colour": "purple",
+          "means": "gravity, whose arrow never changes."
+        },
+        {
+          "colour": "gold",
+          "means": "the path: a dot every tenth of a second, a ring where the ball lands, and the arrow along the curve, which is the sum of the other two."
+        }
+      ],
+      "scene": {
+        "repo": "tejaswigowda/test1",
+        "file": "projectile.json",
+        "branch": "main"
+      },
+      "tutorial": "https://strataeditor.dev/about/tutorials/projectile.html",
+      "render": {
+        "hls": "renders/projectile/master.m3u8",
+        "poster": "renders/projectile/poster.jpg",
+        "scene_commit": "f3a4a0e5874234ae4b3780626827b552038f928d",
+        "scene_hash": "sha256:59f138be427224dd7942ec7c0aca6ba791d3faf9a2918a25d2619a8c21f43ebc",
+        "exporter": "strata-export master, ffmpeg 8.1.1 + libx264 ladder",
+        "published": "2026-10-27",
+        "stale": true
+      },
+      "captions": "renders/projectile/captions.vtt",
+      "credits": [],
+      "license": "CC-BY-4.0"
+    },
+    {
+      "id": "piston",
+      "title": "A crank, a rod and a piston",
+      "subject": "mechanism",
+      "topic": "crank-slider kinematics",
+      "level": "intermediate",
+      "duration_s": 105,
+      "claim": "In a crank-slider the piston reaches its dead centers at the ends of the stroke, and the leverage of a steady push on the piston vanishes there and is largest near the middle of the stroke.",
+      "assumptions": [
+        "rigid parts, no clearances, the piston line passes through the shaft",
+        "kinematics only: no friction, no inertia, no gas pressure",
+        "crank radius r = 1.2 and rod length l = 3.6 scene units, so l / r = 3; the quoted 58.6% and 1.05 r belong to that ratio",
+        "the steady push is a device for reading the leverage, not a model of a real cylinder"
+      ],
+      "status": "demonstration",
+      "checks": [
+        {
+          "what": "crank pin, rod end, piston and leverage marker against the formulas",
+          "samples": 27,
+          "max_residual": 0.006,
+          "units": "scene",
+          "note": "across all eight turns of the crank; the crank pin agrees to 0.00001"
+        }
+      ],
+      "colour_key": [
+        {
+          "colour": "coral (red)",
+          "means": "the dead centers: the rings and labels at the two ends of the stroke."
+        },
+        {
+          "colour": "aqua",
+          "means": "the crankshaft circle and the line the piston travels along."
+        },
+        {
+          "colour": "gold",
+          "means": "the leverage: the stretched line on the rod, the gap, and its marker. The gap shrinks to nothing at the dead centers."
+        },
+        {
+          "colour": "purple",
+          "means": "the steady push arrow on the piston (the lilac blocks under the cylinder are its stand)."
+        }
+      ],
+      "scene": {
+        "repo": "tejaswigowda/test1",
+        "file": "piston.json",
+        "branch": "main"
+      },
+      "tutorial": "https://strataeditor.dev/about/tutorials/piston.html",
+      "render": {
+        "hls": "renders/piston/master.m3u8",
+        "poster": "renders/piston/poster.jpg",
+        "scene_commit": "cf7be14bd7500edb71ad94b5b886351627f5fe05",
+        "scene_hash": "sha256:e9893fa3d954e4557e29ab9eb4cdb7fc343cd8a0b5b4a4bf91fd28451564497a",
+        "exporter": "strata-export master, ffmpeg 8.1.1 + libx264 ladder",
+        "published": "2026-10-27"
+      },
+      "captions": "renders/piston/captions.vtt",
+      "credits": [],
+      "license": "CC-BY-4.0"
+    }
+  ]
+}

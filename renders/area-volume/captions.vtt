@@ -1,0 +1,60 @@
+WEBVTT
+
+1
+00:00:00.800 --> 00:00:09.600
+Why are cells so small? It comes down to geometry.
+Start with a cube, one unit on a side.
+
+2
+00:00:09.750 --> 00:00:18.750
+Six faces of one square each: surface 6.
+Volume 1. Surface to volume: 6.
+
+3
+00:00:18.900 --> 00:00:29.020
+Double the side: each face is 4 squares, so
+surface 24. Volume 8. Surface to volume: 3.
+
+4
+00:00:29.170 --> 00:00:39.220
+Triple it: each face is 9 squares, so surface
+54. Volume 27. Surface to volume: 2.
+
+5
+00:00:39.370 --> 00:00:48.820
+Surface grows with the square of the side, volume with the cube. So the
+bigger it is, the less skin it has for each bit of inside.
+
+6
+00:00:48.970 --> 00:00:57.770
+A cell lives through its skin: food and oxygen come in,
+waste goes out. Too big, and the middle starves.
+
+7
+00:00:57.920 --> 00:01:06.000
+So cells divide. Cut the big cube into slabs,
+then bars, then 27 small cubes.
+
+8
+00:01:06.150 --> 00:01:15.450
+The volume is still 27, but the surface is now
+162. Surface to volume: 6 again.
+
+9
+00:01:15.600 --> 00:01:23.820
+Life uses this trick everywhere. Inside a
+mitochondrion, folds called cristae pack in membrane.
+
+10
+00:01:23.970 --> 00:01:30.620
+In the lungs, millions of tiny alveoli give a
+surface of about 70 square metres.
+
+11
+00:01:30.770 --> 00:01:35.770
+Small, or folded: that is how living
+things get enough surface.
+
+12
+00:01:35.920 --> 00:01:38.420
+Made with Strata.

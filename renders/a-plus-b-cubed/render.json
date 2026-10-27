@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "scene": {
+    "repo": "tejaswigowda/test1",
+    "file": "a+b-cubed.json",
+    "branch": "main",
+    "commit": "89f9272c7b891ab7bf798a2b58de4b3a08a36eab",
+    "hash": "sha256:168d52266fbd58f40c371d11b0ad6cf15f67a3deed74d6068522b8f73cf2e7fd"
+  },
+  "render": {
+    "mode": "offline",
+    "fps": 60,
+    "frames": 3072,
+    "duration_s": 51.2,
+    "width": 1920,
+    "height": 1080,
+    "master_exporter": "strata-export (Render tab, offline, WebCodecs H.264)",
+    "ladder_encoder": "ffmpeg 8.1.1 + libx264",
+    "rendered_at": "2026-10-27T03:32:02.192Z"
+  },
+  "outputs": {
+    "master": "master.m3u8",
+    "renditions": [
+      {
+        "name": "1080p60",
+        "width": 1920,
+        "height": 1080,
+        "bitrate_kbps": 3500,
+        "playlist": "1080p60/index.m3u8",
+        "segments": 9,
+        "max_segment_bytes": 1256727,
+        "total_bytes": 7617835
+      },
+      {
+        "name": "720p60",
+        "width": 1280,
+        "height": 720,
+        "bitrate_kbps": 1800,
+        "playlist": "720p60/index.m3u8",
+        "segments": 9,
+        "max_segment_bytes": 627935,
+        "total_bytes": 3809225
+      },
+      {
+        "name": "480p60",
+        "width": 854,
+        "height": 480,
+        "bitrate_kbps": 900,
+        "playlist": "480p60/index.m3u8",
+        "segments": 9,
+        "max_segment_bytes": 326795,
+        "total_bytes": 1990589
+      }
+    ],
+    "poster": "poster.jpg",
+    "captions": "captions.vtt"
+  },
+  "checks": {
+    "segments_under_20mb": true,
+    "frame_count_matches_duration": true
+  }
+}
