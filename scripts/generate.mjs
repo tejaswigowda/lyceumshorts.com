@@ -17,6 +17,8 @@ const EDITOR = 'https://strataeditor.dev/';
 const REPO_URL = 'https://github.com/tejaswigowda/lyceumshorts.com';
 
 const data = JSON.parse( fs.readFileSync( path.join( root, 'lyceum.json' ), 'utf8' ) );
+// the picture a link to the site itself unfurls with: the site's own, else the first film's poster
+const SITE_IMAGE = `/${ data.image || data.entries[ 0 ].render.poster }`;
 
 const esc = s => String( s ).replace( /&/g, '&amp;' ).replace( /</g, '&lt;' ).replace( />/g, '&gt;' ).replace( /"/g, '&quot;' );
 const read = rel => fs.readFileSync( path.join( root, rel ), 'utf8' );
@@ -38,8 +40,9 @@ export const parseVtt = text => text.split( /\r?\n\r?\n/ ).map( block => {
 	const lines = block.split( /\r?\n/ ).filter( Boolean );
 	const i = lines.findIndex( l => l.includes( '-->' ) );
 	if ( i < 0 ) return null;
+	const id = i > 0 ? lines[ 0 ].trim() : null;
 	const [ a, b ] = lines[ i ].split( '-->' ).map( s => s.trim() ).map( s => s.split( ':' ).reduce( ( acc, n ) => acc * 60 + parseFloat( n ), 0 ) );
-	return { start: a, end: b, text: lines.slice( i + 1 ).join( ' ' ) };
+	return { id, start: a, end: b, text: lines.slice( i + 1 ).join( ' ' ) };
 
 } ).filter( Boolean );
 
@@ -57,7 +60,16 @@ const page = ( { title, description, path: urlPath, body, head = '', scripts = '
 <meta property="og:description" content="${ esc( description ) }">
 <meta property="og:type" content="website">
 <meta property="og:url" content="${ SITE }${ urlPath }">
-${ image ? `<meta property="og:image" content="${ SITE }${ image }">\n` : '' }<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<meta property="og:site_name" content="Lyceum Shorts">
+<meta property="og:image" content="${ SITE }${ image || SITE_IMAGE }">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="720">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${ esc( title ) }">
+<meta name="twitter:description" content="${ esc( description ) }">
+<meta name="twitter:image" content="${ SITE }${ image || SITE_IMAGE }">
+<link rel="alternate" type="application/rss+xml" title="Lyceum Shorts" href="${ SITE }/feed.xml">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/assets/style.css">
 ${ head }${ jsonld ? `<script type="application/ld+json">${ JSON.stringify( jsonld ).replace( /</g, '\\u003c' ) }</script>\n` : '' }</head>
 <body>
@@ -152,7 +164,9 @@ ${ e.colour_key.map( c => `<dt>${ esc( c.colour ) }</dt><dd>${ esc( c.means ) }<
 		? `<ul>\n${ e.credits.map( c => `<li>${ esc( c ) }</li>` ).join( '\n' ) }\n</ul>`
 		: '<p>No third-party assets. Everything is built from primitives in the scene.</p>';
 
-	const transcript = cues.map( c => `<li><a class="ts" href="#player" data-t="${ c.start }">${ clock( c.start ) }</a> ${ esc( c.text ) }</li>` ).join( '\n' );
+	// each cue is an anchor a passage can be linked by: #cue-<id from the captions file>, else its position
+	const cueId = ( c, n ) => `cue-${ c.id && /^[\w-]+$/.test( c.id ) ? c.id : n + 1 }`;
+	const transcript = cues.map( ( c, n ) => `<li id="${ cueId( c, n ) }"><a class="ts" href="#player" data-t="${ c.start }">${ clock( c.start ) }</a> ${ esc( c.text ) } <a class="cue-link" href="#${ cueId( c, n ) }" aria-label="Link to this passage">#</a></li>` ).join( '\n' );
 
 	const body = `<article class="entry">
 <header>
@@ -226,7 +240,8 @@ ${ credits }
 	const jsonld = {
 		'@context': 'https://schema.org', '@type': 'VideoObject', name: e.title, description: e.claim,
 		thumbnailUrl: `${ SITE }/${ e.render.poster }`, uploadDate: e.render.published, duration: iso( e.duration_s ),
-		contentUrl: `${ SITE }/${ e.render.hls }`, license: 'https://creativecommons.org/licenses/by/4.0/',
+		contentUrl: `${ SITE }/${ e.render.hls }`, embedUrl: `${ SITE }/films/${ e.id }/`, url: `${ SITE }/films/${ e.id }/`,
+		learningResourceType: STATUS[ e.status ].label, about: e.topic, educationalLevel: e.level, license: 'https://creativecommons.org/licenses/by/4.0/',
 		transcript: cues.map( c => c.text ).join( ' ' ), inLanguage: 'en', isAccessibleForFree: true,
 	};
 
@@ -310,6 +325,41 @@ const notFoundPage = () => page( {
 	body: `<div class="prose"><h1>Not found</h1><p>That page does not exist. <a href="/">See all the films</a>.</p></div>`,
 } );
 
+// ── feed ─────────────────────────────────────────────────────────────────────
+// RSS 2.0 with an enclosure per film, from the same list the index is built from. The enclosure is the HLS master (the one video
+// file this site has); a podcast app that wants a plain mp4 cannot play it, a feed reader and a crawler can read the entries.
+
+const xml = s => esc( s ).replace( /'/g, '&apos;' );
+const rfc822 = d => new Date( d ).toUTCString();
+
+function feed() {
+
+	const items = [ ...data.entries ].sort( ( a, b ) => String( b.render.published ).localeCompare( String( a.render.published ) ) || a.id.localeCompare( b.id ) );
+	const newest = items.length ? items[ 0 ].render.published : '1970-01-01';
+	return `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+<title>Lyceum Shorts</title>
+<link>${ SITE }/</link>
+<description>Short educational films that ship their own source.</description>
+<language>en</language>
+<lastBuildDate>${ rfc822( newest ) }</lastBuildDate>
+<atom:link href="${ SITE }/feed.xml" rel="self" type="application/rss+xml"/>
+${ items.map( e => `<item>
+<title>${ xml( e.title ) }</title>
+<link>${ SITE }/films/${ e.id }/</link>
+<guid isPermaLink="true">${ SITE }/films/${ e.id }/</guid>
+<pubDate>${ rfc822( e.render.published ) }</pubDate>
+<category>${ xml( subjectLabel( e.subject ) ) }</category>
+<description>${ xml( `${ STATUS[ e.status ].label }: ${ e.claim }` ) }</description>
+<enclosure url="${ SITE }/${ e.render.hls }" length="${ fs.statSync( path.join( root, e.render.hls ) ).size }" type="application/vnd.apple.mpegurl"/>
+</item>` ).join( '\n' ) }
+</channel>
+</rss>
+`;
+
+}
+
 // ── build ─────────────────────────────────────────────────────────────────────
 
 export function build() {
@@ -322,6 +372,7 @@ export function build() {
 	out.set( '404.html', notFoundPage() );
 	const urls = [ '/', ...data.entries.map( e => `/films/${ e.id }/` ), '/about/', '/contribute/' ];
 	out.set( 'sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${ urls.map( u => `<url><loc>${ SITE }${ u }</loc></url>` ).join( '\n' ) }\n</urlset>\n` );
+	out.set( 'feed.xml', feed() );
 	out.set( 'robots.txt', `User-agent: *\nAllow: /\nSitemap: ${ SITE }/sitemap.xml\n` );
 	return out;
 

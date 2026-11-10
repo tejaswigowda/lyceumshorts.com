@@ -159,3 +159,7 @@ pre code { background: none; padding: 0; }
 @media (prefers-reduced-motion: reduce) {
 	* { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
 }
+
+.transcript .cue-link { margin-left: .4em; text-decoration: none; opacity: .6; }
+.transcript .cue-link:hover, .transcript .cue-link:focus { opacity: 1; }
+.transcript li:target { background: rgba(127, 127, 127, .15); }
