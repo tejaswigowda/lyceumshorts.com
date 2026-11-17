@@ -1,15 +1,15 @@
 #!/usr/bin/env node
-// generate.mjs — fill the page templates from lyceum.json. Plain Node, no dependencies, no bundler.
+// Authored canonical markdown -> pinned blog-webCLI -> trusted Lyceum player integration.
 //
 //   node scripts/generate.mjs           write index.html, films/<id>/index.html, about/, contribute/, 404.html, sitemap.xml, robots.txt
-//   node scripts/generate.mjs --check   write nothing; exit 1 if any generated file differs from what lyceum.json produces
+//   node scripts/generate.mjs --check   write nothing; exit 1 if any generated file differs from the build
 //
-// Nothing about a film is written anywhere but lyceum.json (and the render files it points at). The pages are committed
-// output so GitHub Pages serves them as they are and the index needs no JavaScript.
+// Markdown and blog.json are inputs, never build outputs. The pages are committed output so GitHub Pages serves them as they are.
 
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { buildSite } from './blog-webcli.mjs';
 
 const root = path.join( path.dirname( fileURLToPath( import.meta.url ) ), '..' );
 const SITE = 'https://lyceumshorts.com';
@@ -48,49 +48,7 @@ export const parseVtt = text => text.split( /\r?\n\r?\n/ ).map( block => {
 
 // ── shared chrome ─────────────────────────────────────────────────────────────
 
-const page = ( { title, description, path: urlPath, body, head = '', scripts = '', image = null, jsonld = null } ) => `<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${ esc( title ) }</title>
-<meta name="description" content="${ esc( description ) }">
-<link rel="canonical" href="${ SITE }${ urlPath }">
-<meta property="og:title" content="${ esc( title ) }">
-<meta property="og:description" content="${ esc( description ) }">
-<meta property="og:type" content="website">
-<meta property="og:url" content="${ SITE }${ urlPath }">
-<meta property="og:site_name" content="Lyceum Shorts">
-<meta property="og:image" content="${ SITE }${ image || SITE_IMAGE }">
-<meta property="og:image:width" content="1280">
-<meta property="og:image:height" content="720">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="${ esc( title ) }">
-<meta name="twitter:description" content="${ esc( description ) }">
-<meta name="twitter:image" content="${ SITE }${ image || SITE_IMAGE }">
-<link rel="alternate" type="application/rss+xml" title="Lyceum Shorts" href="${ SITE }/feed.xml">
-<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="/assets/style.css">
-${ head }${ jsonld ? `<script type="application/ld+json">${ JSON.stringify( jsonld ).replace( /</g, '\\u003c' ) }</script>\n` : '' }</head>
-<body>
-<a class="skip" href="#main">Skip to content</a>
-<header class="site">
-<a class="brand" href="/">Lyceum Shorts</a>
-<nav aria-label="Site">
-<a href="/">Films</a>
-<a href="/about/">About</a>
-<a href="/contribute/">Contribute</a>
-</nav>
-</header>
-<main id="main">
-${ body }
-</main>
-<footer class="site">
-<p>Short films that ship their own source. Films, scenes and tutorials are CC&#8209;BY&#8209;4.0 unless an entry says otherwise. <a href="${ REPO_URL }">Source of this site</a>.</p>
-</footer>
-${ scripts }</body>
-</html>
-`;
+const page = spec => spec;
 
 // ── index ─────────────────────────────────────────────────────────────────────
 
@@ -362,7 +320,7 @@ ${ items.map( e => `<item>
 
 // ── build ─────────────────────────────────────────────────────────────────────
 
-export function build() {
+function sourcePages() {
 
 	const out = new Map();
 	out.set( 'index.html', indexPage() );
@@ -378,16 +336,84 @@ export function build() {
 
 }
 
+function integrate( html, spec ) {
+
+	const replace = ( from, to, label ) => {
+		if ( ! html.match( from ) ) throw new Error( `${ spec.path }: cannot locate ${ label } in blog-webCLI output` );
+		html = html.replace( from, to );
+	};
+	// This is trusted site-build code, not an author HTML or Custom JS escape hatch.
+	replace( /<header class="site">[\s\S]*?<\/header>/, `<a class="skip" href="#main">Skip to content</a>
+<header class="site"><a class="brand" href="/">Lyceum Shorts</a><nav aria-label="Site"><a href="/">Films</a><a href="/about/">About</a><a href="/contribute/">Contribute</a></nav></header>
+<main id="main">`, 'site header' );
+	replace( /<footer class="site">[\s\S]*?<\/footer>/, `</main>
+<footer class="site"><p>Short films that ship their own source. Films, scenes and tutorials are CC&#8209;BY&#8209;4.0 unless an entry says otherwise. <a href="${ REPO_URL }">Source of this site</a>. Built with <a href="https://blog.webcli.app/about/">blog-webCLI</a>.</p></footer>`, 'site footer' );
+	replace( /<link rel="stylesheet" href="https:\/\/cdnjs\.cloudflare\.com\/ajax\/libs\/font-awesome\/[^"]+"[^>]*>\n?/, '', 'Font Awesome link' );
+	replace( /<link rel="alternate" type="application\/atom\+xml"[^>]*>/, '<link rel="alternate" type="application/rss+xml" title="Lyceum Shorts" href="/feed.xml">', 'feed discovery' );
+	const image = `${ SITE }${ spec.image || SITE_IMAGE }`;
+	replace( /<meta name="twitter:card"[^>]*>/, '<meta name="twitter:card" content="summary_large_image">', 'Twitter card' );
+	replace( /<\/head>/, `<meta property="og:image" content="${ esc( image ) }">
+<meta property="og:image:width" content="1280"><meta property="og:image:height" content="720">
+<meta name="twitter:image" content="${ esc( image ) }">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+${ spec.jsonld ? `<script type="application/ld+json">${ JSON.stringify( spec.jsonld ).replace( /</g, '\\u003c' ) }</script>\n` : '' }</head>`, 'head' );
+	if ( spec.scripts ) {
+		if ( spec.body.includes( 'class="stale"' ) !== html.includes( 'class="stale"' ) ) {
+			throw new Error( `${ spec.path }: the stale-render notice in Markdown disagrees with lyceum.json; update the notice before rebuilding` );
+		}
+		const player = /<section id="player"[\s\S]*?<\/section>/.exec( spec.body );
+		if ( ! player ) throw new Error( `${ spec.path }: no player integration` );
+		replace( /<div class="lyceum-player"><\/div>/, player[ 0 ], 'player placeholder' );
+		for ( const m of spec.body.matchAll( /<a class="ts" href="#player" data-t="([\d.]+)">([^<]+)<\/a>/g ) ) {
+			replace( `<a class="ts" href="#player">${ m[ 2 ] }</a>`, m[ 0 ], `transcript time ${ m[ 2 ] }` );
+		}
+		replace( /<\/body>/, `${ spec.scripts }</body>`, 'player scripts' );
+	}
+	return html;
+
+}
+
+export function build( { readSource = read } = {} ) {
+
+	const specs = sourcePages();
+	const out = new Map();
+	for ( const folder of [ '', 'films/' ] ) {
+		const posts = fs.readdirSync( path.join( root, folder, 'pages' ) )
+			.filter( name => name.endsWith( '.md' ) ).sort()
+			.map( name => ( { path: `pages/${ name }`, text: readSource( `${ folder }pages/${ name }` ) } ) );
+		const blog = readSource( `${ folder }blog.json` );
+		const result = buildSite( { blog, posts, lock: {} } );
+		if ( result.errors.length ) throw new AggregateError( result.errors, result.errors.map( e => e.message ).join( '\n' ) );
+		// Poster metadata is supplied by integrate(); every other generator warning remains a build failure.
+		const warnings = result.warnings.filter( message => ! message.endsWith( ': no cover and no blog.json cover — page has no og:image' ) );
+		if ( warnings.length ) throw new Error( warnings.join( '\n' ) );
+		for ( const [ rel, text ] of Object.entries( result.files ) ) {
+			if ( ! rel.endsWith( '.html' ) ) { out.set( folder + rel, text ); continue; }
+			if ( rel === 'feed/index.html' ) continue;
+			const spec = rel === 'index.html' ? specs.get( 'index.html' )
+				: rel === 'home/index.html' ? specs.get( 'index.html' )
+				: rel === 'not-found/index.html' ? specs.get( '404.html' ) : specs.get( folder + rel );
+			if ( ! spec ) throw new Error( `No Lyceum page specification for ${ folder }${ rel }; adding pages requires a supported site integration` );
+			out.set( folder + rel, integrate( text, spec ) );
+		}
+	}
+	out.set( '404.html', out.get( 'not-found/index.html' ) );
+	for ( const rel of [ 'feed.xml', 'sitemap.xml', 'robots.txt' ] ) out.set( rel, specs.get( rel ) );
+	return out;
+
+}
+
 if ( process.argv[ 1 ] === fileURLToPath( import.meta.url ) ) {
 
 	const check = process.argv.includes( '--check' );
 	let drift = 0;
-	for ( const [ rel, content ] of build() ) {
+	const files = build();
+	for ( const [ rel, content ] of files ) {
 
 		const file = path.join( root, rel );
 		if ( check ) {
 
-			if ( ! fs.existsSync( file ) || fs.readFileSync( file, 'utf8' ) !== content ) { console.error( `✗ ${ rel } is not what lyceum.json produces` ); drift ++; }
+			if ( ! fs.existsSync( file ) || fs.readFileSync( file, 'utf8' ) !== content ) { console.error( `✗ ${ rel } differs from the build` ); drift ++; }
 
 		} else {
 
@@ -397,7 +423,7 @@ if ( process.argv[ 1 ] === fileURLToPath( import.meta.url ) ) {
 		}
 
 	}
-	if ( check ) { if ( drift ) process.exit( 1 ); console.log( '✓ every generated file matches lyceum.json' ); }
-	else console.log( `wrote ${ build().size } files` );
+	if ( check ) { if ( drift ) process.exit( 1 ); console.log( '✓ every generated file matches the build' ); }
+	else console.log( `wrote ${ files.size } files with blog-webCLI` );
 
 }

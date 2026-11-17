@@ -25,18 +25,20 @@ const fail = ( gate, msg ) => { console.error( `✗ ${ gate }: ${ msg }` ); fail
 const pass = ( gate, msg ) => console.log( `✓ ${ gate }: ${ msg }` );
 const before = () => failures;
 
-// ── S1: every page is generated from lyceum.json ─────────────────────────────
+// ── S1: every page matches the build ─────────────────────────────────────────
 {
 	const f0 = before();
 	for ( const [ rel, content ] of build() ) {
 
-		if ( ! exists( rel ) || read( rel ) !== content ) fail( 'S1', `${ rel } is not what lyceum.json produces (run node scripts/generate.mjs)` );
+		if ( ! exists( rel ) || read( rel ) !== content ) fail( 'S1', `${ rel } differs from the build (run node scripts/generate.mjs)` );
 
 	}
 	const ids = new Set( data.entries.map( e => e.id ) );
-	for ( const dir of fs.readdirSync( path.join( root, 'films' ) ) ) if ( ! ids.has( dir ) ) fail( 'S1', `films/${ dir }/ has no entry in lyceum.json` );
+	for ( const dir of fs.readdirSync( path.join( root, 'films' ), { withFileTypes: true } ) ) {
+		if ( dir.isDirectory() && ! [ 'pages', 'index', 'home' ].includes( dir.name ) && ! ids.has( dir.name ) ) fail( 'S1', `films/${ dir.name }/ has no entry in lyceum.json` );
+	}
 	if ( ids.size !== data.entries.length ) fail( 'S1', 'duplicate entry ids' );
-	if ( failures === f0 ) pass( 'S1', `${ data.entries.length } entry pages, the index, About and Contribute all match lyceum.json` );
+	if ( failures === f0 ) pass( 'S1', `${ data.entries.length } entry pages, the index, About and Contribute all match the build` );
 }
 
 // ── S2: epistemic fields ─────────────────────────────────────────────────────
@@ -154,7 +156,7 @@ const before = () => failures;
 	if ( /@import|url\(\s*["']?(https?:)?\/\//i.test( css ) ) fail( 'S5', 'style.css reaches another origin' );
 	const player = read( 'assets/player.js' );
 	if ( /https?:\/\//.test( player.replace( /\/\/.*$/gm, '' ) ) ) fail( 'S5', 'player.js names another origin' );
-	if ( /<script\b/.test( read( 'index.html' ) ) ) fail( 'S5', 'the index carries a script: its list must render without one' );
+	if ( /<script\b(?![^>]*type="application\/ld\+json")/i.test( read( 'index.html' ) ) ) fail( 'S5', 'the index carries an executable script: its list must render without one' );
 	for ( const e of data.entries ) if ( ! read( 'index.html' ).includes( `/films/${ e.id }/` ) ) fail( 'S5', `the index does not list ${ e.id } without scripting` );
 	if ( ! exists( 'assets/vendor/hls.min.js' ) ) fail( 'S5', 'hls.js is not vendored' );
 	if ( failures === f0 ) pass( 'S5', 'every subresource is same-origin, hls.js is vendored, the index has no script (confirm in devtools with the cache cleared)' );

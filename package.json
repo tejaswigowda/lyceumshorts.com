@@ -1,0 +1,12 @@
+{
+  "name": "lyceum-shorts",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/generate.mjs",
+    "check:generated": "node scripts/generate.mjs --check",
+    "test": "npm run check:generated && node scripts/check.mjs && node --test test/*.test.mjs",
+    "check:page": "node --test test/browser.e2e.mjs"
+  },
+  "engines": { "node": ">=22" }
+}

@@ -157,7 +157,7 @@ pre code { background: none; padding: 0; }
 .prose li { margin: 0.35rem 0; }
 
 @media (prefers-reduced-motion: reduce) {
-	* { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
+	* { transition: none !important; animation: none !important; }
 }
 
 .transcript .cue-link { margin-left: .4em; text-decoration: none; opacity: .6; }
