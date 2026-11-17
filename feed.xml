@@ -1,65 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-<channel>
-<title>Lyceum Shorts</title>
-<link>https://lyceumshorts.com/</link>
-<description>Short educational films that ship their own source.</description>
-<language>en</language>
-<lastBuildDate>Tue, 27 Oct 2026 00:00:00 GMT</lastBuildDate>
-<atom:link href="https://lyceumshorts.com/feed.xml" rel="self" type="application/rss+xml"/>
-<item>
-<title>A cube cut into eight blocks</title>
-<link>https://lyceumshorts.com/films/a-plus-b-cubed/</link>
-<guid isPermaLink="true">https://lyceumshorts.com/films/a-plus-b-cubed/</guid>
-<pubDate>Tue, 27 Oct 2026 00:00:00 GMT</pubDate>
-<category>Maths</category>
-<description>Derivation: A cube of side a + b, cut at a along each edge, falls into eight blocks (one a³, three a²b, three ab², one b³), so (a + b)³ = a³ + 3a²b + 3ab² + b³ for positive lengths a and b.</description>
-<enclosure url="https://lyceumshorts.com/renders/a-plus-b-cubed/master.m3u8" length="391" type="application/vnd.apple.mpegurl"/>
-</item>
-<item>
-<title>Why cells are small</title>
-<link>https://lyceumshorts.com/films/area-volume/</link>
-<guid isPermaLink="true">https://lyceumshorts.com/films/area-volume/</guid>
-<pubDate>Tue, 27 Oct 2026 00:00:00 GMT</pubDate>
-<category>Biology</category>
-<description>Demonstration: For cubes, surface area divided by volume is 6, 3 and 2 for sides 1, 2 and 3, falling as 1 / side, so a bigger cell has less surface for each bit of interior.</description>
-<enclosure url="https://lyceumshorts.com/renders/area-volume/master.m3u8" length="391" type="application/vnd.apple.mpegurl"/>
-</item>
-<item>
-<title>Hardy–Weinberg as a square</title>
-<link>https://lyceumshorts.com/films/hardy-weinberg/</link>
-<guid isPermaLink="true">https://lyceumshorts.com/films/hardy-weinberg/</guid>
-<pubDate>Tue, 27 Oct 2026 00:00:00 GMT</pubDate>
-<category>Biology</category>
-<description>Demonstration: With random mating, one generation of offspring comes in the proportions p² + 2pq + q², drawn as a square, and the allele frequencies p and q are unchanged afterwards.</description>
-<enclosure url="https://lyceumshorts.com/renders/hardy-weinberg/master.m3u8" length="391" type="application/vnd.apple.mpegurl"/>
-</item>
-<item>
-<title>A crank, a rod and a piston</title>
-<link>https://lyceumshorts.com/films/piston/</link>
-<guid isPermaLink="true">https://lyceumshorts.com/films/piston/</guid>
-<pubDate>Tue, 27 Oct 2026 00:00:00 GMT</pubDate>
-<category>Mechanism</category>
-<description>Demonstration: In a crank-slider the piston reaches its dead centers at the ends of the stroke, and the leverage of a steady push on the piston vanishes there and is largest near the middle of the stroke.</description>
-<enclosure url="https://lyceumshorts.com/renders/piston/master.m3u8" length="391" type="application/vnd.apple.mpegurl"/>
-</item>
-<item>
-<title>Two motions at once</title>
-<link>https://lyceumshorts.com/films/projectile/</link>
-<guid isPermaLink="true">https://lyceumshorts.com/films/projectile/</guid>
-<pubDate>Tue, 27 Oct 2026 00:00:00 GMT</pubDate>
-<category>Physics</category>
-<description>Demonstration: A thrown ball&apos;s path is two independent motions: constant horizontal speed, and vertical motion under constant gravity.</description>
-<enclosure url="https://lyceumshorts.com/renders/projectile/master.m3u8" length="392" type="application/vnd.apple.mpegurl"/>
-</item>
-<item>
-<title>Squares on a right triangle</title>
-<link>https://lyceumshorts.com/films/pythagoras/</link>
-<guid isPermaLink="true">https://lyceumshorts.com/films/pythagoras/</guid>
-<pubDate>Tue, 27 Oct 2026 00:00:00 GMT</pubDate>
-<category>Maths</category>
-<description>Demonstration: On a right triangle, the squares on the two legs together cover exactly the square on the hypotenuse: 3² + 4² = 5², shown with tiles, then again for 5-12-13 and 8-15-17.</description>
-<enclosure url="https://lyceumshorts.com/renders/pythagoras/master.m3u8" length="391" type="application/vnd.apple.mpegurl"/>
-</item>
-</channel>
-</rss>
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <id>https://lyceumshorts.com/</id>
+  <title>Lyceum Shorts</title>
+  <subtitle>Short educational films in maths, biology, physics and mechanism. Each one ships the scene that made it: open it, edit it, and read the tutorial that built it.</subtitle>
+  <updated>1970-01-01T00:00:00Z</updated>
+  <link rel="alternate" type="text/html" href="https://lyceumshorts.com/"/>
+  <link rel="self" type="application/atom+xml" href="https://lyceumshorts.com/feed.xml"/>
+  <author><name>Lyceum Shorts</name></author>
+  <generator>blog-webcli</generator>
+
+</feed>
