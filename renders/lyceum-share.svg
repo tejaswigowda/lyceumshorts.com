@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#14102a"/>
+  <path d="M715 0v630M785 0v630M855 0v630M925 0v630M995 0v630M1065 0v630M1135 0v630M715 70h485M715 140h485M715 210h485M715 280h485M715 350h485M715 420h485M715 490h485M715 560h485" stroke="#26203f"/>
+  <rect x="74" y="126" width="54" height="6" rx="3" fill="#c4b5fd"/>
+  <g font-family="Arial, sans-serif">
+    <text x="74" y="174" fill="#c4b5fd" font-size="23" font-weight="bold" letter-spacing="3">THE FILM CATALOGUE</text>
+    <text x="69" y="286" fill="#ffffff" font-size="95" font-weight="bold">Lyceum</text>
+    <text x="69" y="385" fill="#ffffff" font-size="95" font-weight="bold">Shorts</text>
+    <text x="76" y="461" fill="#ded7f5" font-size="32">Short films. Open scenes.</text>
+    <text x="76" y="534" fill="#c4b5fd" font-size="23">lyceumshorts.com</text>
+  </g>
+  <g stroke-width="2">
+    <circle cx="934" cy="315" r="189" fill="none" stroke="#433660"/>
+    <rect x="765" y="146" width="338" height="338" fill="#211638" stroke="#6b569e"/>
+    <path d="M765 146l169 169 169-169M765 484l169-169 169 169" fill="none" stroke="#6b569e"/>
+    <circle cx="934" cy="315" r="118" fill="#362352" stroke="#c4b5fd"/>
+    <path d="M906 253l90 62-90 62z" fill="#f3edff"/>
+    <circle cx="765" cy="146" r="7" fill="#c4b5fd"/>
+    <circle cx="1103" cy="484" r="7" fill="#c4b5fd"/>
+  </g>
+</svg>
