@@ -9,6 +9,25 @@ import { build } from '../scripts/generate.mjs';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = (file) => readFile(path.join(root, file), 'utf8');
 
+test('homepage uses a pinned 1200 by 630 landscape card without changing film posters', async () => {
+  const blog = JSON.parse(await read('blog.json'));
+  const lock = JSON.parse(await read('assets.lock.json'));
+  const sha = lock['images/lyceum-share.png'];
+  assert.equal(blog.cover, 'asset:images/lyceum-share.png');
+  const url = `https://lyceumshorts.com/share/${sha}/renders/lyceum-share.png`;
+  const png = await readFile(path.join(root, `share/${sha}/renders/lyceum-share.png`));
+  assert.equal(png.subarray(12, 16).toString(), 'IHDR');
+  assert.equal(png.readUInt32BE(16), 1200);
+  assert.equal(png.readUInt32BE(20), 630);
+  const generated = build();
+  for (const html of [await read('index.html'), generated.get('index.html')]) {
+    assert.ok(html.includes(`<meta property="og:image" content="${url}">`));
+    assert.equal((html.match(/property="og:image"/g) || []).length, 1);
+    assert.match(html, /name="twitter:card" content="summary_large_image"/);
+  }
+  assert.match(generated.get('films/pythagoras/index.html'), /property="og:image" content="https:\/\/lyceumshorts\.com\/renders\/pythagoras\/poster\.jpg"/);
+});
+
 test('build uses authored markdown and settings without producing or overwriting them', () => {
   const overrides = new Map([
     ['films/pages/pythagoras.md', readFileSync(path.join(root, 'films/pages/pythagoras.md'), 'utf8').replace('Shows the relationship in particular cases.', 'Shows an edited relationship in particular cases.')],

@@ -350,11 +350,13 @@ function integrate( html, spec ) {
 <footer class="site"><p>Short films that ship their own source. Films, scenes and tutorials are CC&#8209;BY&#8209;4.0 unless an entry says otherwise. <a href="${ REPO_URL }">Source of this site</a>. Built with <a href="https://blog.webcli.app/about/">blog-webCLI</a>.</p></footer>`, 'site footer' );
 	replace( /<link rel="stylesheet" href="https:\/\/cdnjs\.cloudflare\.com\/ajax\/libs\/font-awesome\/[^"]+"[^>]*>\n?/, '', 'Font Awesome link' );
 	replace( /<link rel="alternate" type="application\/atom\+xml"[^>]*>/, '<link rel="alternate" type="application/rss+xml" title="Lyceum Shorts" href="/feed.xml">', 'feed discovery' );
-	const image = `${ SITE }${ spec.image || SITE_IMAGE }`;
+	const cover = spec.path === '/' && /<meta property="og:image" content="([^"]+)">/.exec( html )?.[ 1 ];
+	const image = cover || esc( `${ SITE }${ spec.image || SITE_IMAGE }` );
 	replace( /<meta name="twitter:card"[^>]*>/, '<meta name="twitter:card" content="summary_large_image">', 'Twitter card' );
-	replace( /<\/head>/, `<meta property="og:image" content="${ esc( image ) }">
-<meta property="og:image:width" content="1280"><meta property="og:image:height" content="720">
-<meta name="twitter:image" content="${ esc( image ) }">
+	html = html.replace( /<meta (?:property="og:image"|name="twitter:image")[^>]*>\n?/g, '' );
+	replace( /<\/head>/, `<meta property="og:image" content="${ image }">
+<meta property="og:image:width" content="${ cover ? 1200 : 1280 }"><meta property="og:image:height" content="${ cover ? 630 : 720 }">
+<meta name="twitter:image" content="${ image }">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 ${ spec.jsonld ? `<script type="application/ld+json">${ JSON.stringify( spec.jsonld ).replace( /</g, '\\u003c' ) }</script>\n` : '' }</head>`, 'head' );
 	if ( spec.scripts ) {
@@ -382,7 +384,9 @@ export function build( { readSource = read } = {} ) {
 			.filter( name => name.endsWith( '.md' ) ).sort()
 			.map( name => ( { path: `pages/${ name }`, text: readSource( `${ folder }pages/${ name }` ) } ) );
 		const blog = readSource( `${ folder }blog.json` );
-		const result = buildSite( { blog, posts, lock: {} } );
+		const lockFile = `${ folder }assets.lock.json`;
+		const lock = fs.existsSync( path.join( root, lockFile ) ) ? JSON.parse( readSource( lockFile ) ) : {};
+		const result = buildSite( { blog, posts, lock } );
 		if ( result.errors.length ) throw new AggregateError( result.errors, result.errors.map( e => e.message ).join( '\n' ) );
 		// Poster metadata is supplied by integrate(); every other generator warning remains a build failure.
 		const warnings = result.warnings.filter( message => ! message.endsWith( ': no cover and no blog.json cover — page has no og:image' ) );

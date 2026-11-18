@@ -1,10 +1,16 @@
 {
+  "schemaVersion": 1,
   "title": "Lyceum Shorts",
   "description": "Short educational films in maths, biology, physics and mechanism. Each one ships the scene that made it: open it, edit it, and read the tutorial that built it.",
   "author": "Lyceum Shorts",
   "domain": "https://lyceumshorts.com",
   "repo": "tejaswigowda/lyceumshorts.com",
   "theme": "default",
+  "cover": "asset:images/lyceum-share.png",
+  "assets": {
+    "base": "https://lyceumshorts.com/share/{sha}/{path}",
+    "repos": { "images": "tejaswigowda/lyceumshorts.com/renders" }
+  },
   "stylesheet": "linked",
   "seo": {
     "sitemap": false
